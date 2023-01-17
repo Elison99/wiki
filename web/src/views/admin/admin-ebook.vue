@@ -14,7 +14,7 @@
         <template #cover="{ text: cover }">
           <img v-if="cover" :src="cover" alt="avatar" />
         </template>
-        <template v-slot:bodyCell="{ text, record}">
+        <template v-slot:action="{ text, record}">
           <a-space size="small">
             <a-button type="primary">
               编辑
