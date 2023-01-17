@@ -12,16 +12,16 @@
           @change="handleTableChange"
       >
         <template #cover="{ text: cover }">
-          <img v-if="cover" :src="cover" alt="avatar" />
+          <img v-if="cover" :src="cover" alt="avatar"/>
         </template>
         <template v-slot:action="{ text, record}">
           <a-space size="small">
-            <a-button type="primary" @click="edit">
+            <a-button type="primary" @click="edit(record)">
               编辑
             </a-button>
-              <a-button type="danger">
-                删除
-              </a-button>
+            <a-button type="danger">
+              删除
+            </a-button>
           </a-space>
         </template>
       </a-table>
@@ -34,12 +34,29 @@
       :confirm-loading="modalLoading"
       @ok="handleModalOk"
   >
-    <p>test</p>
+    -
+    <a-form :model="ebook" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
+      <a-form-item label="封面">
+        <a-input v-model:value="ebook.cover"/>
+      </a-form-item>
+      <a-form-item label="名称">
+        <a-input v-model:value="ebook.name"/>
+      </a-form-item>
+      <a-form-item label="分类一">
+        <a-input v-model:value="ebook.category1Id" />
+      </a-form-item>
+      <a-form-item label="分类二">
+        <a-input v-model:value="ebook.category2Id" />
+      </a-form-item>
+      <a-form-item label="描述">
+        <a-input v-model:value="ebook.description" type="textarea"/>
+      </a-form-item>
+    </a-form>
   </a-modal>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import {defineComponent, onMounted, ref} from 'vue';
 import axios from 'axios';
 
 export default defineComponent({
@@ -57,44 +74,44 @@ export default defineComponent({
       {
         title: '封面',
         dataIndex: 'cover',
-        slots: { customRender: 'cover' }
+        slots: {customRender: 'cover'}
       },
       {
         title: '名称',
         dataIndex: 'name',
-        slots: { customRender: 'name' }
+        slots: {customRender: 'name'}
       },
       {
         title: '分类一',
         key: 'category1Id',
         dataIndex: 'category1Id',
-        slots: { customRender: 'category1Id' }
+        slots: {customRender: 'category1Id'}
       },
       {
         title: '分类二',
         // key: 'category2Id',
         dataIndex: 'category2Id',
-        slots: { customRender: 'category2Id' }
+        slots: {customRender: 'category2Id'}
       },
       {
         title: '文档数',
         dataIndex: 'docCount',
-        slots: { customRender: 'docCount' }
+        slots: {customRender: 'docCount'}
       },
       {
         title: '阅读数',
         dataIndex: 'viewCount',
-        slots: { customRender: 'viewCount' }
+        slots: {customRender: 'viewCount'}
       },
       {
         title: '点赞数',
         dataIndex: 'voteCount',
-        slots: { customRender: 'voteCount' }
+        slots: {customRender: 'voteCount'}
       },
       {
         title: 'Action',
         key: 'action',
-        slots: { customRender: 'action' }
+        slots: {customRender: 'action'}
       }
     ];
 
@@ -106,9 +123,9 @@ export default defineComponent({
       // 如果不清空现有数据，则编辑保存重新加载数据后，再点编辑，则列表显示的还是编辑前的数据
       ebooks.value = [];
       axios.get("/ebook/list", {
-        params:{
-          page:params.page,
-          size:params.size
+        params: {
+          page: params.page,
+          size: params.size
         }
       }).then((response) => {
         loading.value = false;
@@ -144,25 +161,27 @@ export default defineComponent({
 
     onMounted(() => {
       handleQuery({
-        page:1,
-        size:pagination.value.pageSize
+        page: 1,
+        size: pagination.value.pageSize
       });
     });
 
     //---------------表单----------------
+    const ebook = ref({});
     const modalVisible = ref(false)
     const modalLoading = ref(false)
-    const handleModalOk = ()=>{
+    const handleModalOk = () => {
       modalLoading.value = true;
-      setTimeout(()=>{
+      setTimeout(() => {
         modalLoading.value = false;
         modalVisible.value = false;
-      },2000)
+      }, 2000)
     }
 
     // 编辑
-    const edit = () =>{
+    const edit = (record:any) => {
       modalVisible.value = true;
+      ebook.value = record;
     }
     return {
       ebooks,
@@ -174,7 +193,9 @@ export default defineComponent({
       edit,
       modalVisible,
       modalLoading,
-      handleModalOk
+      handleModalOk,
+
+      ebook
     }
   }
 });
