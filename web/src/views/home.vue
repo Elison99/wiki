@@ -98,7 +98,7 @@ export default defineComponent({
       axios.get("/ebook/list").then(
           (resp) => {
             const data = resp.data;
-            ebooks.value = data.content;
+            ebooks.value = data.content.list;
             ebooks1.books = data.content;
           })
     })

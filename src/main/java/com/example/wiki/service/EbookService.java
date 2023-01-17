@@ -5,6 +5,7 @@ import com.example.wiki.domain.EbookExample;
 import com.example.wiki.mapper.EbookMapper;
 import com.example.wiki.req.EbookReq;
 import com.example.wiki.resp.EbookResp;
+import com.example.wiki.resp.PageResp;
 import com.example.wiki.util.CopyUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -24,14 +25,14 @@ public class EbookService {
 
     private static final Logger LOG = LoggerFactory.getLogger(EbookService.class);
 
-    public List<EbookResp> list(EbookReq req){
+    public PageResp<EbookResp> list(EbookReq req){
         EbookExample ebookExample = new EbookExample();
         EbookExample.Criteria criteria = ebookExample.createCriteria();
         if (!ObjectUtils.isEmpty(req.getName())){
             criteria.andNameLike("%"+req.getName()+"%");
         }
 
-        PageHelper.startPage(1,3);
+        PageHelper.startPage(req.getPage(),req.getSize());
         List<Ebook> ebooks = ebookMapper.selectByExample(ebookExample);
 
         PageInfo<Ebook> pageInfo = new PageInfo<>(ebooks);
@@ -47,9 +48,11 @@ public class EbookService {
 //            EbookResp ebookResp = CopyUtil.copy(ebook, EbookResp.class);
 //            respList.add(ebookResp);
 //        }
-
+        PageResp<EbookResp> pageResp = new PageResp<>();
         //列表复制
         List<EbookResp> respList = CopyUtil.copyList(ebooks, EbookResp.class);
-        return respList;
+        pageResp.setTotal(pageInfo.getTotal());
+        pageResp.setList(respList);
+        return pageResp;
     }
 }

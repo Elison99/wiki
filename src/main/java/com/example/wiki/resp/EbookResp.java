@@ -1,6 +1,6 @@
 package com.example.wiki.resp;
 
-public class EbookResp {
+public class EbookResp{
     private Long id;
 
     private String name;
