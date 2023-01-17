@@ -110,7 +110,6 @@ export default defineComponent({
         pagination.value.current = params.page;
         pagination.value.total = data.content.total;
 
-        pagination.value.current = params.page;
         // if (data.success) {
         //   ebooks.value = data.content.list;
         //
