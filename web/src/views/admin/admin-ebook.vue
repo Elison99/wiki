@@ -199,10 +199,6 @@ export default defineComponent({
 
     onMounted(() => {
       handleQueryCategory();
-      handleQuery({
-        page: 1,
-        size: pagination.value.pageSize
-      });
     });
 
     //---------------表单----------------
@@ -266,9 +262,9 @@ export default defineComponent({
      * 数据查询
      **/
     const handleQueryCategory = () => {
-      loading.value = true;
+      // loading.value = true;
       axios.get("/category/all").then((response) => {
-        loading.value = false;
+        // loading.value = false;
         const data = response.data;
         // console.log(categorys)
 
@@ -277,7 +273,11 @@ export default defineComponent({
 
           level1.value = [];
           level1.value = Tool.array2Tree(categorys,0);
-
+          //加载完分类后·再加载电子书·否则如果分类树加载很慢，则电子书渲染会报错
+          handleQuery({
+            page: 1,
+            size: pagination.value.pageSize
+          });
         } else {
           message.error(data.message);
         }
