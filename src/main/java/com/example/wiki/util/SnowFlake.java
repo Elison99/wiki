@@ -18,12 +18,18 @@ public class SnowFlake {
     /**
      * 每一部分占用的位数
      */
-    private final static long SEQUENCE_BIT = 12; //序列号占用的位数
-    private final static long MACHINE_BIT = 5;   //机器标识占用的位数
-    private final static long DATACENTER_BIT = 5;//数据中心占用的位数
+    private final static long SEQUENCE_BIT = 8; //序列号占用的位数
+    private final static long MACHINE_BIT = 3;   //机器标识占用的位数
+    private final static long DATACENTER_BIT = 2;//数据中心占用的位数
 
     /**
      * 每一部分的最大值
+     * 16923686985830409
+     * 270779151290601476
+     * 67694907278525445
+     * 4230933360813063
+     * 1057733826136328
+     * 528867052333318
      */
     private final static long MAX_DATACENTER_NUM = -1L ^ (-1L << DATACENTER_BIT);
     private final static long MAX_MACHINE_NUM = -1L ^ (-1L << MACHINE_BIT);
