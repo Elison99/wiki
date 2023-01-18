@@ -3,46 +3,28 @@
     <a-layout-sider width="200" style="background: #fff">
       <a-menu
           mode="inline"
-          v-model:selectedKeys="selectedKeys2"
-          v-model:openKeys="openKeys"
           :style="{ height: '100%', borderRight: 0 }"
+          @click="handdleClick"
       >
-        <a-sub-menu key="sub1">
-          <template #title>
-              <span>
-                <user-outlined />
-                subnav 1111111111
-              </span>
+        <a-menu-item key="welcome">
+          <router-link :to="'/'">
+            <MailOutlined/>
+            <span>欢迎</span>
+          </router-link>
+
+        </a-menu-item>
+        <a-sub-menu v-for="item in level1" :key="item.id" :disabled="true">
+          <template v-slot:title>
+            <span><user-outlined />{{item.name}}</span>
           </template>
-          <a-menu-item key="1">option1</a-menu-item>
-          <a-menu-item key="2">option2</a-menu-item>
-          <a-menu-item key="3">option3</a-menu-item>
-          <a-menu-item key="4">option4</a-menu-item>
+          <a-menu-item v-for="child in item.children" :key="child.id">
+            <MailOutlined /><span>{{child.name}}</span>
+          </a-menu-item>
         </a-sub-menu>
-        <a-sub-menu key="sub2">
-          <template #title>
-              <span>
-                <laptop-outlined />
-                subnav 2
-              </span>
-          </template>
-          <a-menu-item key="5">option5</a-menu-item>
-          <a-menu-item key="6">option6</a-menu-item>
-          <a-menu-item key="7">option7</a-menu-item>
-          <a-menu-item key="8">option8</a-menu-item>
-        </a-sub-menu>
-        <a-sub-menu key="sub3">
-          <template #title>
-              <span>
-                <notification-outlined />
-                subnav 3
-              </span>
-          </template>
-          <a-menu-item key="9">option9</a-menu-item>
-          <a-menu-item key="10">option10</a-menu-item>
-          <a-menu-item key="11">option11</a-menu-item>
-          <a-menu-item key="12">option12</a-menu-item>
-        </a-sub-menu>
+        <a-menu-item key="tip" :disabled="true">
+          <span>以上菜单在分类管理配置</span>
+        </a-menu-item>
+
       </a-menu>
     </a-layout-sider>
     <a-layout-content
@@ -73,6 +55,8 @@
 <script lang="ts">
 import {defineComponent, onMounted, reactive, ref,toRef} from 'vue';
 import axios from 'axios';
+import {message} from "ant-design-vue";
+import {Tool} from "@/util/tool";
 
 // const listData: any = [];
 //
@@ -92,9 +76,36 @@ export default defineComponent({
   name: 'Home',
   setup() {
     const ebooks = ref();
-    const ebooks1 = reactive({books: []})
+    // const ebooks1 = reactive({books: []})
+
+    const level1 = ref()
+    let categorys:any;
+    /**
+     * 数据查询
+     **/
+    const handleQueryCategory = () => {
+      axios.get("/category/all").then((response) => {
+        const data = response.data;
+        // console.log(categorys)
+
+        if (data.success) {
+          categorys = data.content;
+
+          level1.value = [];
+          level1.value = Tool.array2Tree(categorys,0);
+
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
+    const handleClick = () =>{
+      console.log("menu click")
+    }
 
     onMounted(() => {
+      handleQueryCategory();
       axios.get("/ebook/list",{
         params:{
           page:1,
@@ -110,7 +121,7 @@ export default defineComponent({
 
     return {
       ebooks,
-      ebooks2: toRef(ebooks1, "books"),
+      // ebooks2: toRef(ebooks1, "books"),
       // listData,
       pagination: {
         onChange: (page: number) => {
@@ -123,6 +134,8 @@ export default defineComponent({
         {type: 'LikeOutlined', text: '156'},
         {type: 'MessageOutlined', text: '2'},
       ],
+      handleClick,
+      level1
     }
   }
 });
