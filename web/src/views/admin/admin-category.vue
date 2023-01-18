@@ -24,7 +24,7 @@
       <a-table
           :columns="columns"
           :row-key="record => record.id"
-          :data-source="categorys"
+          :data-source="level1"
           :loading="loading"
           :pagination="false"
           @change="handleTableChange"
@@ -87,6 +87,7 @@ export default defineComponent({
     const categorys = ref();
     const param = ref();
     param.value = {};
+    const  level1 = ref();
     const loading = ref(false);
 
     const columns = [
@@ -128,6 +129,9 @@ export default defineComponent({
 
         if (data.success) {
           categorys.value = data.content;
+
+          level1.value = [];
+          level1.value = Tool.array2Tree(categorys.value,0);
 
         } else {
           message.error(data.message);
@@ -201,7 +205,9 @@ export default defineComponent({
       add,
       handleDelete,
       handleQuery,
-      param
+      param,
+
+      level1
     }
   }
 });
