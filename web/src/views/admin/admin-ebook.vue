@@ -32,6 +32,9 @@
         <template #cover="{ text: cover }">
           <img v-if="cover" :src="cover" alt="avatar"/>
         </template>
+        <template v-slot:category="{ text, record }">
+          <span>{{ getCategoryName(record.category1Id) }} / {{ getCategoryName(record.category2Id) }}</span>
+        </template>
         <template v-slot:action="{ text, record}">
           <a-space size="small">
             <a-button type="primary" @click="edit(record)">
@@ -112,18 +115,25 @@ export default defineComponent({
         dataIndex: 'name',
         slots: {customRender: 'name'}
       },
+      // {
+      //   title: '分类一',
+      //   key: 'category1Id',
+      //   dataIndex: 'category1Id',
+      //   slots: {customRender: 'category1Id'}
+      // },
+      // {
+      //   title: '分类二',
+      //   // key: 'category2Id',
+      //   dataIndex: 'category2Id',
+      //   slots: {customRender: 'category2Id'}
+      // },
       {
-        title: '分类一',
-        key: 'category1Id',
-        dataIndex: 'category1Id',
-        slots: {customRender: 'category1Id'}
-      },
-      {
-        title: '分类二',
+        title: '分类',
         // key: 'category2Id',
-        dataIndex: 'category2Id',
-        slots: {customRender: 'category2Id'}
+        // dataIndex: 'category2Id',
+        slots: {customRender: 'category'}
       },
+
       {
         title: '文档数',
         dataIndex: 'docCount',
@@ -251,6 +261,7 @@ export default defineComponent({
     };
 
     const level1 = ref()
+    let categorys:any;
     /**
      * 数据查询
      **/
@@ -262,7 +273,7 @@ export default defineComponent({
         // console.log(categorys)
 
         if (data.success) {
-          const categorys = data.content;
+          categorys = data.content;
 
           level1.value = [];
           level1.value = Tool.array2Tree(categorys,0);
@@ -272,6 +283,17 @@ export default defineComponent({
         }
       });
     };
+
+    const getCategoryName = (cid:number) => {
+      let result = "";
+      categorys.forEach((item:any) => {
+        if (item.id === cid){
+          result = item.name;
+        }
+      });
+    return result;
+
+    }
 
 
     return {
@@ -293,7 +315,8 @@ export default defineComponent({
       handleQuery,
       param,
       level1,
-      categoryIds
+      categoryIds,
+      getCategoryName
 
 
     }
