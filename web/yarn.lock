@@ -192,7 +192,15 @@
   resolved "https://registry.npmmirror.com/@babel/parser/-/parser-7.20.7.tgz#66fe23b3c8569220817d5feb8b9dcdc95bb4f71b"
   integrity sha512-T3Z9oHybU+0vZlY9CiDSJQTD5ZapcW18ZctFMi0MOAl/4BjFF4ul7NVSARLdbGO5vDqy9eQiGTV0LtKfvCYvcg==
 
-"@babel/runtime@^7.10.5":
+"@babel/runtime-corejs3@^7.11.2":
+  version "7.20.7"
+  resolved "https://registry.npmmirror.com/@babel/runtime-corejs3/-/runtime-corejs3-7.20.7.tgz#a1e5ea3d758ba6beb715210142912e3f29981d84"
+  integrity sha512-jr9lCZ4RbRQmCR28Q8U8Fu49zvFqLxTY9AMOUz+iyMohMoAgpEcVxY+wJNay99oXOpOcCTODkk70NDN2aaJEeg==
+  dependencies:
+    core-js-pure "^3.25.1"
+    regenerator-runtime "^0.13.11"
+
+"@babel/runtime@^7.10.5", "@babel/runtime@^7.11.2":
   version "7.20.7"
   resolved "https://registry.npmmirror.com/@babel/runtime/-/runtime-7.20.7.tgz#fcb41a5a70550e04a7b708037c7c32f7f356d8fd"
   integrity sha512-UF0tvkUtxwAgZ5W/KrkHf0Rn0fdnLDU9ScxBrEVNUprE/MzirjK4MJUX1/BVDv00Sv8cljtukVK1aky++X1SjQ==
@@ -1715,6 +1723,11 @@ copy-webpack-plugin@^9.0.1:
     normalize-path "^3.0.0"
     schema-utils "^3.1.1"
     serialize-javascript "^6.0.0"
+
+core-js-pure@^3.25.1:
+  version "3.27.2"
+  resolved "https://registry.npmmirror.com/core-js-pure/-/core-js-pure-3.27.2.tgz#47e9cc96c639eefc910da03c3ece26c5067c7553"
+  integrity sha512-Cf2jqAbXgWH3VVzjyaaFkY1EBazxugUepGymDoeteyYr9ByX51kD2jdHZlsEF/xnJMyN3Prua7mQuzwMg6Zc9A==
 
 core-js@^3.15.1:
   version "3.27.1"
@@ -5142,6 +5155,14 @@ vuex@^4.0.0:
   integrity sha512-hmV6UerDrPcgbSy9ORAtNXDr9M4wlNP4pEFKye4ujJF8oqgFFuxDCdOLS3eNoRTtq5O3hoBDh9Doj1bQMYHRbQ==
   dependencies:
     "@vue/devtools-api" "^6.0.0-beta.11"
+
+wangeditor@4.6.3:
+  version "4.6.3"
+  resolved "https://registry.npmmirror.com/wangeditor/-/wangeditor-4.6.3.tgz#cc572911b20e318fca8254af0fe36efc40642bdc"
+  integrity sha512-00G+T8mi2uP/cDK2/zM650FsqSOzIPmj/yyEWa8PXtoPMOhZRLReiW1sE/XtxYmIA5/VUsY/MfMxMfppZ/8AIA==
+  dependencies:
+    "@babel/runtime" "^7.11.2"
+    "@babel/runtime-corejs3" "^7.11.2"
 
 warning@^4.0.0:
   version "4.0.3"
