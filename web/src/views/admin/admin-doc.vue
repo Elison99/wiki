@@ -202,14 +202,14 @@ export default defineComponent({
     editor.config.zIndex = 0;
 
     const handleSave = () => {
-      modalLoading.value = true;
+      // modalLoading.value = true;
       doc.value.content = editor.txt.html();
       axios.post("/doc/save",doc.value).then((response)=>{
         modalLoading.value = false;
         const data = response.data;
         if (data.success){
-          modalVisible.value = false;
-
+          // modalVisible.value = false;
+          message.success("保存成功！")
           //重新加载列表
           handleQuery();
         }else{
@@ -287,6 +287,8 @@ export default defineComponent({
 
     // 编辑
     const edit = (record:any) => {
+      //清空富文本
+      editor.txt.html("");
       modalVisible.value = true;
       doc.value = Tool.copy(record);
       handleQueryContent();
@@ -304,6 +306,8 @@ export default defineComponent({
 
     // 新增
     const add = () => {
+      //清空富文本
+      editor.txt.html("");
       modalVisible.value = true;
       doc.value = {
         ebookId:route.query.ebookId
