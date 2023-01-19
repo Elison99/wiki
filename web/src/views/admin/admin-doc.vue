@@ -132,7 +132,7 @@ export default defineComponent({
       {
         title: '名称',
         dataIndex: 'name',
-        slots: {customRender: 'name'}
+        // slots: {customRender: 'name'}
       },
       {
         title: 'Action',
