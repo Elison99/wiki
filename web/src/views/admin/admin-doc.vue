@@ -168,6 +168,22 @@ export default defineComponent({
       });
     };
 
+    /**
+     * 内容查询
+     **/
+    const handleQueryContent = () => {
+      axios.get("/doc/find-content/"+doc.value.id).then((response) => {
+        const data = response.data;
+        // console.log(docs)
+
+        if (data.success) {
+          editor.txt.html(data.content)
+        } else {
+          message.error(data.message);
+        }
+      });
+    };
+
 
     onMounted(() => {
       handleQuery();
@@ -273,6 +289,7 @@ export default defineComponent({
     const edit = (record:any) => {
       modalVisible.value = true;
       doc.value = Tool.copy(record);
+      handleQueryContent();
       // 不能选择当前节点及其所有子孙节点，作为父节点，会使树断开
 
       treeSelectData.value = Tool.copy(level1.value);
