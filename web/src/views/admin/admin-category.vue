@@ -63,7 +63,7 @@
 
     <a-form :model="category" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
       <a-form-item label="名称">
-<!--        <a-input v-model:value="category.name"/>-->
+        <a-input v-model:value="category.name"/>
       </a-form-item>
       <a-form-item label="父分类">
         <a-input v-model:value="category.parent" />
