@@ -44,6 +44,16 @@ public class DocService {
 
         return list;
     }
+    public List<DocQueryResp> all(Long ebookId){
+        DocExample docExample = new DocExample();
+        docExample.setOrderByClause("sort asc");
+        docExample.createCriteria().andEbookIdEqualTo(ebookId);
+        List<Doc> docList = docMapper.selectByExample(docExample);
+        //列表复制
+        List<DocQueryResp> list = CopyUtil.copyList(docList, DocQueryResp.class);
+
+        return list;
+    }
 
     public PageResp<DocQueryResp> list(DocQueryReq req){
         DocExample docExample = new DocExample();
@@ -111,6 +121,10 @@ public class DocService {
 
     public String findContent(Long id) {
         Content content = contentMapper.selectByPrimaryKey(id);
-        return content.getContent();
+        if (ObjectUtils.isEmpty(content)){
+            return "";
+        }else{
+            return content.getContent();
+        }
     }
 }
