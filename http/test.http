@@ -22,3 +22,14 @@ GET http://localhost:8080/ebook/list?page=1&size=1001
 
 
 ###
+
+
+GET http://localhost:8080/test/redis/set/123/test
+Accept: application/json
+
+###
+
+GET http://localhost:8080/redis/get/15271595887169536
+Accept: application/json
+
+###
