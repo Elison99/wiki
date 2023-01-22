@@ -28,9 +28,8 @@
         :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }"
     >
       <div class="welcome" v-show="isShowWelcome">
-<!--        <the-welcome></the-welcome>-->
-        <h1>欢迎使用知识库</h1>
-        <h1>welcome</h1>
+        <the-welcome></the-welcome>
+
       </div>
       <a-list v-show="!isShowWelcome" item-layout="vertical" size="large" :grid="{ gutter: 20, column: 3 }" :pagination="pagination" :data-source="ebooks">
         <template #renderItem="{ item }">
@@ -69,6 +68,7 @@ import {defineComponent, onMounted, reactive, ref,toRef} from 'vue';
 import axios from 'axios';
 import {message} from "ant-design-vue";
 import {Tool} from "@/util/tool";
+import TheWelcome from "@/components/the-welcome.vue";
 
 // const listData: any = [];
 //
@@ -86,6 +86,9 @@ import {Tool} from "@/util/tool";
 
 export default defineComponent({
   name: 'Home',
+  components:{
+    TheWelcome
+  },
   setup() {
     const ebooks = ref();
     // const ebooks1 = reactive({books: []})
