@@ -3,20 +3,27 @@ package com.example.wiki.service;
 import com.example.wiki.domain.Content;
 import com.example.wiki.domain.Doc;
 import com.example.wiki.domain.DocExample;
+import com.example.wiki.exception.BusinessException;
+import com.example.wiki.exception.BusinessExceptionCode;
 import com.example.wiki.mapper.ContentMapper;
 import com.example.wiki.mapper.DocMapper;
+import com.example.wiki.mapper.DocMapperCust;
 import com.example.wiki.req.DocQueryReq;
 import com.example.wiki.req.DocSaveReq;
 import com.example.wiki.resp.DocQueryResp;
 import com.example.wiki.resp.PageResp;
 import com.example.wiki.util.CopyUtil;
+import com.example.wiki.util.RedisUtil;
+import com.example.wiki.util.RequestContext;
 import com.example.wiki.util.SnowFlake;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
@@ -32,6 +39,16 @@ public class DocService {
 
     @Autowired
     private ContentMapper contentMapper;
+
+    @Autowired
+    private DocMapperCust docMapperCust;
+
+    @Autowired
+    private RedisUtil redisUtil;
+
+
+    @Autowired
+    private WsService wsService;
 
     private static final Logger LOG = LoggerFactory.getLogger(DocService.class);
 
@@ -89,12 +106,15 @@ public class DocService {
      * 保存
      * @param req
      */
+    @Transactional
     public void save(DocSaveReq req) {
         Doc doc = CopyUtil.copy(req, Doc.class);
         Content content = CopyUtil.copy(req, Content.class);
         if (ObjectUtils.isEmpty(doc.getId())){
             //新增
             doc.setId(snowFlake.nextId());
+            doc.setViewCount(0);
+            doc.setVoteCount(0);
             docMapper.insert(doc);
 
             content.setId(doc.getId());
@@ -121,10 +141,40 @@ public class DocService {
 
     public String findContent(Long id) {
         Content content = contentMapper.selectByPrimaryKey(id);
+        //文档阅读数加一
+        docMapperCust.increaseViewCount(id);
         if (ObjectUtils.isEmpty(content)){
             return "";
         }else{
             return content.getContent();
         }
+    }
+
+    public void vote(Long id) {
+        // docMapperCust.increaseVoteCount(id);
+        // 远程IP+doc.id作为key，24小时内不能重复
+        String ip = RequestContext.getRemoteAddr();
+        if (redisUtil.validateRepeat("DOC_VOTE_" + id + "_" + ip, 5000)) {
+            docMapperCust.increaseVoteCount(id);
+        } else {
+            throw new BusinessException(BusinessExceptionCode.VOTE_REPEAT);
+        }
+
+        Doc docDb = docMapper.selectByPrimaryKey(id);
+        String logId = MDC.get("LOG_ID");
+        // 推送消息
+        wsService.sendInfo("【" + docDb.getName() + "】被点赞！",logId);
+        // rocketMQTemplate.convertAndSend("VOTE_TOPIC", "【" + docDb.getName() + "】被点赞！");
+    }
+
+//    @Async
+//    public void sendInfo(Long id){
+//        Doc docDb = docMapper.selectByPrimaryKey(id);
+//        String logId = MDC.get("LOG_ID");
+//        webSocketServer.sendInfo("【" + docDb.getName() + "】被点赞！");
+//    }
+
+    public void updateEbookInfo() {
+        docMapperCust.updateEbookInfo();
     }
 }

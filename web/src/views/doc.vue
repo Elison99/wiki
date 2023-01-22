@@ -15,7 +15,20 @@
           </a-tree>
         </a-col>
         <a-col :span="18">
+          <div>
+            <h2>{{doc.name}}</h2>
+            <div>
+              <span>阅读数：{{doc.viewCount}}</span> &nbsp; &nbsp;
+              <span>点赞数：{{doc.voteCount}}</span>
+            </div>
+            <a-divider style="height: 2px; background-color: #9999cc"/>
+          </div>
           <div :innerHTML="html" class="wangeditor"></div>
+          <div class="vote-div" style="text-align: -webkit-center;">
+            <a-button type="primary" shape="round" :size="'large'" @click="vote">
+              <template #icon><LikeOutlined /> &nbsp;点赞：{{doc.voteCount}} </template>
+            </a-button>
+          </div>
         </a-col>
       </a-row>
     </a-layout-content>
@@ -97,7 +110,9 @@ export default defineComponent({
       console.log('selected', selectedKeys, info);
       if (Tool.isNotEmpty(selectedKeys)) {
         // 选中某一节点时，加载该节点的文档信息
-        doc.value = info.selectedNodes[0].props;
+        // doc.value = info.selectedNodes[0].props;
+        doc.value = info.node;
+        console.log("level1:",info)
         // 加载内容
         handleQueryContent(selectedKeys[0]);
       }
@@ -190,7 +205,7 @@ export default defineComponent({
 /* 点赞 */
 .vote-div {
   padding: 15px;
-  text-align: center;
+  text-align: center !important;
 }
 
 /* 图片自适应 */
@@ -203,5 +218,8 @@ export default defineComponent({
 .wangeditor iframe {
   width: 100%;
   height: 400px;
+}
+.vote-div .ant-btn-icon-only{
+  height: 50px !important;
 }
 </style>
