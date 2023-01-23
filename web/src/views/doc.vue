@@ -204,7 +204,7 @@ export default defineComponent({
 
 /* 点赞 */
 .vote-div {
-  padding: 15px;
+  padding-bottom: 55px;
   text-align: center !important;
 }
 

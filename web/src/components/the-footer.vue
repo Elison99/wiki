@@ -1,5 +1,5 @@
 <template>
-  <a-layout-footer style="text-align: center">
+  <a-layout-footer style="text-align: center;position: fixed;left: 0;bottom: 0;width: 100%;">
     Ant Design ©2018 Created by Ant UED1111{{user.name}}
   </a-layout-footer>
 </template>
